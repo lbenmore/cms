@@ -1,12 +1,15 @@
 {
   "status": 1,
-  "message": "Successfully retrieved user 24.",
+  "message": "User 24 is signed in",
   "payload": {
-    "id": 24,
-    "first_name": "Lisa",
-    "last_name": "Benmore",
-    "email_address": "lbenmore@gmail.com",
-    "username": "lbenmore",
-    "password": "password1234"
+    "isSignedIn": true,
+    "user": {
+      "id": 24,
+      "first_name": "Lisa",
+      "last_name": "Benmore",
+      "email_address": "lbenmore@gmail.com",
+      "username": "lbenmore",
+      "password": "password1234"
+    }
   }
 }

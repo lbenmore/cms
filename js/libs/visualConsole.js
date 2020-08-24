@@ -9,7 +9,8 @@ Object.assign(output.style, {
   backgroundColor: 'rgba(128, 128, 128, 0.5)',
   fontFamily: 'monospace',
   whiteSpace: 'pre-wrap',
-  opacity: '0.8'
+  opacity: '0.8',
+  overflow: 'auto'
 });
 document.body.appendChild(output);
 
@@ -22,6 +23,12 @@ window.onerror = function (message, source, lineno, colno, error) {
 
 const _log = console.log;
 console.log = function () {
-  output.innerHTML += `<div>Log: ${Array.from(arguments).join(' ')}</div>`;
+  const args = Array.from(arguments);
+  const result = []
+  for (const arg of args) {
+    if (typeof arg === 'object') result.push(JSON.stringify(arg));
+    else result.push(arg);
+  }
+  output.innerHTML += `<div>Log: ${result.join(' ')}</div>`;
   _log(arguments);
 }

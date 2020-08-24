@@ -92,26 +92,28 @@ let $$;
       }, opts);
     }
     
-    el.on = (evt, fn, opts) => {
-      if (el.length) {
-        for (const _ of el) $$(_).on(evt, fn, opts);
+    if (el) {
+      el.on = (evt, fn, opts) => {
+        if (el.length) {
+          for (const _ of el) $$(_).on(evt, fn, opts);
+          return el;
+        }
+        
+        switch (evt) {
+          case 'swipeup':
+          case 'swiperight':
+          case 'swipedown':
+          case 'swipeleft':
+            initSwipeEvent(el, evt, fn, opts);
+            break;
+            
+          default:
+            listener(el, evt, fn, opts);
+        }
+        
         return el;
-      }
-      
-      switch (evt) {
-        case 'swipeup':
-        case 'swiperight':
-        case 'swipedown':
-        case 'swipeleft':
-          initSwipeEvent(el, evt, fn, opts);
-          break;
-          
-        default:
-          listener(el, evt, fn, opts);
-      }
-      
-      return el;
-    };
+      };
+    }
     
     return el;
   };
@@ -139,7 +141,7 @@ let $$;
     xhr.onload = () => {
       let data;
       
-      switch (method) {
+      switch (type) {
         case 'json':
           try {
             data = JSON.parse(xhr.responseText);
@@ -164,6 +166,26 @@ let $$;
     for (const _ in headers) xhr.setRequestHeader(_, headers[_]);
     params ? xhr.send(fd) : xhr.send();
   };
+  
+  $$.preload = (assets, fn) => {
+    function loadAsset (assets, currentIndex) {
+      const img = new Image();
+      img.src = assets[currentIndex];
+      img.onload = img.onerror = loadHandler.bind(null, assets, ++currentIndex);
+    }
+    
+    function loadHandler (assets, currentIndex) {
+      if (currentIndex < assets.length) {
+        loadAsset(assets, currentIndex);
+      } else {
+        fn && fn();
+      }
+    }
+    
+    if (typeof assets === 'string') assets = [assets];
+    
+    loadHandler(assets, 0);
+  }
   
   $$.onReady = fn => {
     if (doc.readyState === 'complete') fn()
