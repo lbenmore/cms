@@ -1,0 +1,14 @@
+* {
+  position: relative;
+  box-sizing: border-box;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-overflow-scrolling: auto;
+}
+
+body {
+  margin: 0;
+  width: 100vw;
+  min-height: 100vh;
+  min-height: calc(var(--vh) * 100);
+}
