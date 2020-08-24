@@ -1,0 +1,12 @@
+{
+  "home": {
+    "name": "Home",
+    "html": "html/pages/home.html",
+    "css": [
+      "css/pages/home.css"
+    ],
+    "js": [
+      "js/pages/home.js"
+    ]
+  }
+}

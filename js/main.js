@@ -5,6 +5,10 @@
   
   function eventListeners () {
     win.addEventListener('resize', setStyles);  
+    
+    core.events.addEventListener('corePageLoad', () => {
+      core.vars.title = event.detail.pageName;
+    });
   }
   
   function init () {
