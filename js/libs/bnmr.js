@@ -127,6 +127,7 @@ let $$;
       success = (() => {}),
       error = (() => {}),
       progress = (() => {}),
+      passback,
       headers,
       params
     } = options;
@@ -134,10 +135,10 @@ let $$;
     const xhr = new XMLHttpRequest();
     const fd = new FormData();
     
-    for (const _ in params) fd.apped(_, params[_]);
+    for (const _ in params) fd.append(_, params[_]);
     
-    xhr.onerror = () => error.call(xhr);
-    xhr.onprogress = () => progress.call(xhr);
+    xhr.onerror = () => error.call(xhr, passback);
+    xhr.onprogress = () => progress.call(xhr, passback);
     xhr.onload = () => {
       let data;
       
@@ -146,7 +147,7 @@ let $$;
           try {
             data = JSON.parse(xhr.responseText);
           } catch (err) {
-            error.call(xhr, err);
+            error.call(xhr, err, passback);
             return;
           }
           break;
@@ -159,7 +160,7 @@ let $$;
           data = xhr.responseText;
       }
       
-      success.call(xhr, data);
+      success.call(xhr, data, passback);
     };
     
     xhr.open(method, url, async);
