@@ -28,7 +28,9 @@ core.fns.parseIncludes = () => {
   
   function checkLoad (total, current) {
     if (current === total) {
-      if ($$(`${core.container} [data-core-include]`, true).length) core.fns.parseIncludes();
+      if ($$(`${core.container} [data-core-include]`, true).length) {
+        core.fns.parseIncludes();
+      }
     }
   }
   
