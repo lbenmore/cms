@@ -23,6 +23,14 @@ core.log = function () {
 
 core.fns.parseIncludes = () => {
   const incs = $$(`${core.container} [data-core-include]`, true);
+  const numIncs = incs.length;
+  let currInc = 0;
+  
+  function checkLoad (total, current) {
+    if (current === total) {
+      if ($$(`${core.container} [data-core-include]`, true).length) core.fns.parseIncludes();
+    }
+  }
   
   core.log('parseIncludes');
   
@@ -37,6 +45,7 @@ core.fns.parseIncludes = () => {
       success: html => {
         inc.innerHTML = html;
         inc.removeAttribute('data-core-include');
+        checkLoad(numIncs, ++currInc);
       },
       error: res => console.log(`Error retrieving include: ${url} -> ${res}`)
     });

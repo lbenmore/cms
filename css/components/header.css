@@ -5,3 +5,11 @@ header {
   background: springgreen;
   z-index: 1;
 }
+
+nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: var(--gutter);
+  overflow: auto;
+}
