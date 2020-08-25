@@ -8,7 +8,25 @@ core.controllers = {};
 core.config = {};
 core.user = {};
 
-core.fns.parsePage = () => {
+core.fns.parseIncludes = () => {
+  const incs = $$(`${core.container} [data-core-include]`, true);
+  incs.forEach(inc => {
+    const src = inc.dataset.coreInclude;
+    const url = src.indexOf('html/') === -1 ? src : `html/${src}`;
+    $$.ajax({
+      url,
+      success: res => {
+        inc.innerHTML = res;
+        inc.removeAttribute('data-core-include');
+      },
+      error: res => {
+        console.log(`Error retrieving include: ${url} -> ${res}`);
+      }
+    })
+  })
+};
+
+core.fns.parseTokens = () => {
   const pattern = /\{\{\s*(\S*)\s*\}\}/g;
   let match;
   
@@ -22,6 +40,11 @@ core.fns.parsePage = () => {
     }
     $$(core.container).innerHTML = $$(core.container).innerHTML.replace(new RegExp(macro, 'g'), result);
   }
+};
+
+core.fns.parsePage = () => {
+  core.fns.parseIncludes();
+  core.fns.parseTokens();
 };
 
 core.fns.loadPage = (page, pageName) => {

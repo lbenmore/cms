@@ -1,3 +1,5 @@
 body {
   --vh: 1vh;
+  --header-height: 80px;
+  --gutter: 16px;
 }

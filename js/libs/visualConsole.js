@@ -6,10 +6,11 @@ Object.assign(output.style, {
   padding: '16px',
   width: '25vw',
   height: '50vh',
-  backgroundColor: 'rgba(128, 128, 128, 0.5)',
+  backgroundColor: 'rgba(255, 255, 255, 0.8)',
   fontFamily: 'monospace',
   whiteSpace: 'pre-wrap',
   opacity: '0.8',
+  boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.5)',
   overflow: 'auto'
 });
 document.body.appendChild(output);
