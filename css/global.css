@@ -26,5 +26,4 @@ main {
   width: 100%;
   padding: var(--gutter);
   min-height: calc((var(--vh) * 100) - var(--header-height));
-  background: blueviolet;
 }
