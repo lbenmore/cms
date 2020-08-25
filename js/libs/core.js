@@ -19,7 +19,7 @@ core.log = function () {
   //     console.log(`${_}, ${err[_]}`);
   //   }
   // }
-}
+};
 
 core.fns.parseIncludes = () => {
   const incs = $$(`${core.container} [data-core-include]`, true);
@@ -28,21 +28,19 @@ core.fns.parseIncludes = () => {
   
   incs.forEach(inc => {
     const src = inc.dataset.coreInclude;
-    const url = src.indexOf('html/') === -1 ? src : `html/${src}`;
+    const url = src.indexOf('html/') === -1 ? `html/${src}` : src;
     
     core.log('parseIncludes ->', url);
     
     $$.ajax({
       url,
-      success: res => {
-        inc.innerHTML = res;
+      success: html => {
+        inc.innerHTML = html;
         inc.removeAttribute('data-core-include');
       },
-      error: res => {
-        console.log(`Error retrieving include: ${url} -> ${res}`);
-      }
-    })
-  })
+      error: res => console.log(`Error retrieving include: ${url} -> ${res}`)
+    });
+  });
 };
 
 core.fns.parseTokens = () => {
@@ -68,8 +66,8 @@ core.fns.parseTokens = () => {
 
 core.fns.parsePage = () => {
   core.log('parsePage');
-  core.fns.parseIncludes();
   core.fns.parseTokens();
+  core.fns.parseIncludes();
 };
 
 core.fns.loadPage = (page, pageName) => {
@@ -152,7 +150,6 @@ core.fns.setUser = user => {
   core.log('setUser -> user:', user);
   core.user = user;
   delete core.user.password;
-  core.log(core.user);
 }
 
 core.fns.init = res => {
