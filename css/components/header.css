@@ -1,0 +1,7 @@
+header {
+  top: 0;
+  left: 0;
+  height: var(--header-height);
+  background: springgreen;
+  z-index: 1;
+}

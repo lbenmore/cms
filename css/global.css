@@ -25,16 +25,6 @@ main {
   left: 0;
   width: 100%;
   padding: var(--gutter);
-  /*min-height: calc((var(--vh) * 100) - var(--header-height));*/
-  height: calc(var(--vh) * 100 - var(--header-height));
+  min-height: calc((var(--vh) * 100) - var(--header-height));
   background: blueviolet;
-}
-
-/* COMPONENTS */
-header {
-  top: 0;
-  left: 0;
-  height: var(--header-height);
-  background: springgreen;
-  z-index: 1;
 }
