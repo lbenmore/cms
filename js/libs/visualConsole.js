@@ -12,7 +12,7 @@ Object.assign(output.style, {
   outline: 'none',
   backgroundColor: 'rgba(255, 255, 255, 0.8)',
   fontFamily: 'monospace',
-  whiteSpace: 'pre',
+  whiteSpace: 'nowrap',
   opacity: '0.8',
   boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.5)',
   overflow: 'auto',
