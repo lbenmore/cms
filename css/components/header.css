@@ -1,0 +1,97 @@
+header {
+  top: 0;
+  left: 0;
+  box-shadow: var(--shadow);
+  z-index: 1;
+}
+
+header table {
+  width: 100%;
+  height: var(--header-height);
+}
+
+header td {
+  vertical-align: middle;
+  padding: var(--gutter);
+}
+
+header td:last-of-type {
+  width: calc(var(--gutter) * 2 + var(--menu-hamburger-width));
+  padding: 0;
+}
+
+label[for='toggleNav'] {
+  display: block;
+  width: calc(var(--gutter) * 2 + var(--menu-hamburger-width));
+  height: calc(var(--header-height) - (var(--gutter) * 2));
+}
+
+label[for='toggleNav'] span {
+  display: block;
+  position: absolute;
+  top: calc((var(--header-height) - var(--gutter) * 2) / 2);
+  right: var(--gutter);
+  width: var(--menu-hamburger-width);
+  height: 2px;
+  background-color: black;
+  -webkit-transition: -webkit-transform 0.3s;
+  transition: transform 0.3s;
+}
+
+label[for='toggleNav'] span::before,
+label[for='toggleNav'] span::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: inherit;
+  -webkit-transition: inherit;
+  transition: inherit;
+}
+
+label[for='toggleNav'] span::before {
+  -webkit-transform: translateY(-8px);
+  transform: translateY(-8px);
+}
+
+
+label[for='toggleNav'] span::after {
+  -webkit-transform: translateY(8px);
+  transform: translateY(8px);
+}
+
+#toggleNav:checked ~ label[for='toggleNav'] span {
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+#toggleNav:checked ~ label[for='toggleNav'] span::before,
+#toggleNav:checked ~ label[for='toggleNav'] span::after {
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+nav {
+  position: fixed;
+  top: var(--header-height);
+  right: 0;
+  width: 240px;
+  box-shadow: var(--shadow);
+  -webkit-transform: translateX(calc(100% + var(--gutter)));
+  transform: translateX(calc(100% + var(--gutter)));
+  -webkit-transition: -webkit-transform 0.3s;
+  transition: transform 0.3s;
+}
+
+#toggleNav:checked ~ nav {
+  -webkit-transform: translate(0);
+  transform: translate(0);
+}
+
+nav ul {
+  padding: var(--gutter);
+  list-style: none;
+}

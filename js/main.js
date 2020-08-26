@@ -1,6 +1,6 @@
 (function (win, doc) {
   function setStyles () {
-    doc.body.style.setProperty('--vh', win.innerHeight / 100);
+    doc.body.style.setProperty('--vh', `${win.innerHeight / 100}px`);
   }
   
   function eventListeners () {

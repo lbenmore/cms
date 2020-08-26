@@ -3,7 +3,8 @@
     "name": "Home",
     "html": "html/pages/home.html",
     "css": [
-      "css/pages/home.css"
+      "css/pages/home.css",
+      "css/components/header.css"
     ],
     "js": [
       "js/pages/home.js"
