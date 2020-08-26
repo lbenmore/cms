@@ -1,11 +1,11 @@
 const output = document.createElement('div');
+const btnClear = document.createElement('button');
 const _log = console.log;
 
-output.setAttribute('contenteditable', 'true');
 Object.assign(output.style, {
   position: 'fixed',
-  bottom: '8px',
-  right: '8px',
+  top: '8px',
+  left: `${innerWidth - (innerWidth / 4) - 8}px`,
   padding: '16px',
   width: '25vw',
   height: '50vh',
@@ -16,47 +16,95 @@ Object.assign(output.style, {
   opacity: '0.8',
   boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.5)',
   overflow: 'auto',
-  zIndex: '2'
+  zIndex: '999'
 });
 
+btnClear.textContent = 'Clear';
+
+output.appendChild(btnClear);
 document.body.appendChild(output);
 
-output.onkeydown = () => event.preventDefault();
-output.onfocus = () => {
-  Object.assign(output.style, {
-    width: 'calc(100vw - (var(--gutter) * 4))',
-    height: 'calc(100vh - var(--gutter))',
-    backgroundColor: 'white',
-    opacity: '1'
-  });
+output.dragEnd = (isMobile, dragBind) => {
+  const moveEvent = isMobile ? 'touchmove' : 'mousemove';
+  removeEventListener(moveEvent, dragBind);
+  
+  output.style.boxShadow = '0px 0px 8px rgba(0, 0, 0, 0.5)';
+
+  output.addEventListener('mousedown', output.initDrag);
+  output.addEventListener('touchstart', output.initDrag);
 };
-output.onblur = () => {
+
+output.drag = (isMobile, evt) => {
+  /**
+   * TODO
+   * why offset so jumpy
+   */
+  const x = isMobile ? event.changedTouches[0].clientX : event.clientX;
+  const y = isMobile ? event.changedTouches[0].clientY : event.clientY;
+  const { layerX, layerY } = evt
+  
   Object.assign(output.style, {
-    width: '25vw',
-    height: '50vh',
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    opacity: '0.8'
+    top: `${y - layerY}px`,
+    left: `${x - layerX}px`
   });
 };
 
-$$(output).on('swiperight', () => {
-  output.blur();
+output.dragStart = (isMobile, evt) => {
+  const moveEvent = isMobile ? 'touchmove' : 'mousemove';
+  const endEvent = isMobile ? 'touchend' : 'mouseup';
+  const dragBind = output.drag.bind(null, isMobile, evt);
+  const dragEndBind = output.dragEnd.bind(null, isMobile, dragBind);
+  
+  output.style.boxShadow = '0px 0px 8px rgba(128, 0, 255, 0.5)';
+  
+  addEventListener(moveEvent, dragBind);
+  addEventListener(endEvent, dragEndBind);
+};
+
+output.initDrag = () => {
+  const isMobile = event.type === 'touchstart';
+  const endEvent = isMobile ? 'touchend' : 'mouseup';
+  const to = setTimeout(output.dragStart.bind(null, isMobile, event), 500);
+  console.log('initDrag -> layerX, layerY', event.layerX, event.layerY);
+  
+  output.addEventListener(endEvent, () => clearTimeout(to));
+  output.removeEventListener('mousedown', output.initDrag);
+  output.removeEventListener('touchstart', output.initDrag);
+};
+
+output.addEventListener('mousedown', output.initDrag);
+output.addEventListener('touchstart', output.initDrag);
+
+btnClear.addEventListener('click', () => {
+  event.preventDefault();
+  console.log(event.type);
+  output.innerHTML = '';
+  output.appendChild(btnClear);
 });
 
 window.onerror = function (message, source, lineno, colno, error) {
   const div = document.createElement('div');
   div.style.color = 'crimson';
+  div.style.pointerEvents = 'none';
   div.innerHTML += `${source.split('/').pop()} @ ${lineno}: ${message}`;
   output.appendChild(div);
 };
 
 console.log = function () {
+  const div = document.createElement('div');
   const args = Array.from(arguments);
-  const result = []
+  const result = [];
+  
+  div.style.pointerEvents = 'none';
+  
   for (const arg of args) {
     if (typeof arg === 'object') result.push(JSON.stringify(arg));
     else result.push(arg);
   }
-  output.innerHTML += `<div>Log: ${result.join(' ')}</div>`;
+  
+  div.innerHTML += `Log: ${result.join(' ')}`;
+  
+  output.appendChild(div);
+  
   _log(arguments);
-}
+};
