@@ -4,7 +4,7 @@ const _log = console.log;
 output.setAttribute('contenteditable', 'true');
 Object.assign(output.style, {
   position: 'fixed',
-  bottom: '8px',
+  top: '8px',
   right: '8px',
   padding: '16px',
   width: '25vw',

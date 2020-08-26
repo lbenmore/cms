@@ -1,3 +1,7 @@
+.dsp-block {
+  display: block;
+}
+
 .pos-fix {
   position: fixed;
 }
