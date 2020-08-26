@@ -5,8 +5,7 @@ const _log = console.log;
 Object.assign(output.style, {
   position: 'fixed',
   top: '8px',
-  // left: `${innerWidth - (innerWidth / 4) - 8}px`,
-  left: '8px',
+  left: `${innerWidth - (innerWidth / 4) - 8}px`,
   padding: '16px',
   width: '25vw',
   height: '50vh',
