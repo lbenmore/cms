@@ -2,4 +2,6 @@ body {
   --vh: 1vh;
   --header-height: 80px;
   --gutter: 16px;
+  --menu-hamburger-width: 24px;
+  --shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
 }
