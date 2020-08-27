@@ -65,7 +65,6 @@ output.initDrag = () => {
   const isMobile = event.type === 'touchstart';
   const endEvent = isMobile ? 'touchend' : 'mouseup';
   const to = setTimeout(output.dragStart.bind(null, isMobile, event), 500);
-  console.log('initDrag -> layerX, layerY', event.layerX, event.layerY);
   
   output.addEventListener(endEvent, () => clearTimeout(to));
   output.removeEventListener('mousedown', output.initDrag);
