@@ -147,7 +147,7 @@ core.fns.loadPage = (page, pageName) => {
 
 core.fns.onHashChange = () => {
   const pageName = window.location.hash.slice(2);
-  if (!pageName || !hasOwnProperty(core.config, pageName)) {
+  if (!pageName || !core.config.hasOwnProperty(pageName)) {
     core.log(`onHashChange -> ${pageName ? 'page name not in config' : 'no page name available'}`)
     return;
   }
