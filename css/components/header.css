@@ -1,6 +1,7 @@
 header {
   top: 0;
   left: 0;
+  background-color: var(--bkg-primary);
   box-shadow: var(--shadow);
   z-index: 1;
 }
@@ -79,6 +80,7 @@ nav {
   top: var(--header-height);
   right: 0;
   width: 240px;
+  background-color: var(--bkg-primary);
   box-shadow: var(--shadow);
   -webkit-transform: translateX(calc(100% + var(--gutter)));
   transform: translateX(calc(100% + var(--gutter)));
