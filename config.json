@@ -20,5 +20,25 @@
     "js": [
       "js/pages/sign_in.js"
     ]
+  },
+  "register": {
+    "name": "Register",
+    "html": "html/pages/register.html",
+    "css": [
+      "css/components/header.css"
+    ],
+    "js": [
+      "js/pages/register.js"
+    ]
+  },
+  "reset_password": {
+    "name": "Reset Password",
+    "html": "html/pages/reset_password.html",
+    "css": [
+      "css/components/header.css"
+    ],
+    "js": [
+      "js/pages/reset_password.js"
+    ]
   }
 }
