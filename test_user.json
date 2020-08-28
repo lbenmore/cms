@@ -2,7 +2,7 @@
   "status": 1,
   "message": "User 24 is signed in",
   "payload": {
-    "isSignedIn": true,
+    "isSignedIn": 0,
     "user": {
       "id": 24,
       "first_name": "Lisa",

@@ -147,14 +147,22 @@ core.fns.loadPage = (page, pageName) => {
 
 core.fns.onHashChange = () => {
   const pageName = window.location.hash.slice(2);
+  if (!core.config.hasOwnProperty(pageName)) {
+    core.log('onHashChange -> Page does not exist:', pageName);
+    return;
+  }
   core.log('onHashChange -> pageName:', pageName);
   core.fns.loadPage(core.config[pageName], pageName);
 };
 
 core.fns.goToPage = pageName => {
-  core.log('goToPage -> pageName:', pageName);
   if (!pageName) pageName = Object.keys(core.config)[0];
-  window.location.hash = `/${pageName}`;
+  core.log('goToPage -> pageName:', pageName);
+  if (window.location.hash.slice(2) === pageName) {
+    core.fns.loadPage(core.config[pageName], pageName);
+  } else {
+    window.location.hash = `/${pageName}`;
+  }
 };
 
 core.fns.setUser = user => {
@@ -167,7 +175,7 @@ core.fns.init = res => {
   core.log('init -> authentication response:', res);
   if (res.status) {
     if (res.payload.isSignedIn) {
-      core.fns.goToPage();
+      core.fns.goToPage(window.location.hash.slice(2));
       core.fns.setUser(res.payload.user);
     } else {
       core.fns.goToPage('sign_in');

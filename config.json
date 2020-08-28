@@ -3,11 +3,42 @@
     "name": "Home",
     "html": "html/pages/home.html",
     "css": [
-      "css/pages/home.css",
-      "css/components/header.css"
+      "css/components/header.css",
+      "css/pages/home.css"
     ],
     "js": [
       "js/pages/home.js"
+    ]
+  },
+  "sign_in": {
+    "name": "Sign In",
+    "html": "html/pages/sign_in.html",
+    "css": [
+      "css/components/header.css",
+      "css/pages/home.css"
+    ],
+    "js": [
+      "js/pages/sign_in.js"
+    ]
+  },
+  "register": {
+    "name": "Register",
+    "html": "html/pages/register.html",
+    "css": [
+      "css/components/header.css"
+    ],
+    "js": [
+      "js/pages/register.js"
+    ]
+  },
+  "reset_password": {
+    "name": "Reset Password",
+    "html": "html/pages/reset_password.html",
+    "css": [
+      "css/components/header.css"
+    ],
+    "js": [
+      "js/pages/reset_password.js"
     ]
   }
 }

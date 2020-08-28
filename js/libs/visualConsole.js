@@ -35,10 +35,6 @@ output.dragEnd = (isMobile, dragBind) => {
 };
 
 output.drag = (isMobile, evt) => {
-  /**
-   * TODO
-   * why offset so jumpy
-   */
   const x = isMobile ? event.changedTouches[0].clientX : event.clientX;
   const y = isMobile ? event.changedTouches[0].clientY : event.clientY;
   const { layerX, layerY } = evt
@@ -65,7 +61,6 @@ output.initDrag = () => {
   const isMobile = event.type === 'touchstart';
   const endEvent = isMobile ? 'touchend' : 'mouseup';
   const to = setTimeout(output.dragStart.bind(null, isMobile, event), 500);
-  console.log('initDrag -> layerX, layerY', event.layerX, event.layerY);
   
   output.addEventListener(endEvent, () => clearTimeout(to));
   output.removeEventListener('mousedown', output.initDrag);
@@ -76,8 +71,6 @@ output.addEventListener('mousedown', output.initDrag);
 output.addEventListener('touchstart', output.initDrag);
 
 btnClear.addEventListener('click', () => {
-  event.preventDefault();
-  console.log(event.type);
   output.innerHTML = '';
   output.appendChild(btnClear);
 });
@@ -88,6 +81,7 @@ window.onerror = function (message, source, lineno, colno, error) {
   div.style.pointerEvents = 'none';
   div.innerHTML += `${source.split('/').pop()} @ ${lineno}: ${message}`;
   output.appendChild(div);
+  output.scrollTo(0, output.scrollHeight);
 };
 
 console.log = function () {
@@ -105,6 +99,8 @@ console.log = function () {
   div.innerHTML += `Log: ${result.join(' ')}`;
   
   output.appendChild(div);
+  
+  output.scrollTo(0, output.scrollHeight);
   
   _log(arguments);
 };
