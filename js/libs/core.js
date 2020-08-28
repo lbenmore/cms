@@ -147,8 +147,8 @@ core.fns.loadPage = (page, pageName) => {
 
 core.fns.onHashChange = () => {
   const pageName = window.location.hash.slice(2);
-  if (!pageName || !core.config.hasOwnProperty(pageName)) {
-    core.log(`onHashChange -> ${pageName ? 'page name not in config' : 'no page name available'}`)
+  if (!core.config.hasOwnProperty(pageName)) {
+    core.log('onHashChange -> Page does not exist:', pageName);
     return;
   }
   core.log('onHashChange -> pageName:', pageName);
@@ -158,8 +158,11 @@ core.fns.onHashChange = () => {
 core.fns.goToPage = pageName => {
   if (!pageName) pageName = Object.keys(core.config)[0];
   core.log('goToPage -> pageName:', pageName);
-  window.location.hash = '';
-  window.location.hash = `/${pageName}`;
+  if (window.location.hash.slice(2) === pageName) {
+    core.fns.loadPage(core.config[pageName], pageName);
+  } else {
+    window.location.hash = `/${pageName}`;
+  }
 };
 
 core.fns.setUser = user => {
