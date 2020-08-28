@@ -39,6 +39,7 @@ core.fns.parseIncludes = () => {
   incs.forEach(inc => {
     const src = inc.dataset.coreInclude;
     const url = src.indexOf('html/') === -1 ? `html/${src}` : src;
+    const incName = url.split('/').pop().split('.')[0];
     
     core.log('parseIncludes ->', url);
     
@@ -48,6 +49,7 @@ core.fns.parseIncludes = () => {
         inc.innerHTML = html;
         inc.removeAttribute('data-core-include');
         checkLoad(numIncs, ++currInc);
+        core.controllers[incName] && core.controllers[incName]();
       },
       error: res => console.log(`Error retrieving include: ${url} -> ${res}`)
     });
