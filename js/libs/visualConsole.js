@@ -35,10 +35,6 @@ output.dragEnd = (isMobile, dragBind) => {
 };
 
 output.drag = (isMobile, evt) => {
-  /**
-   * TODO
-   * why offset so jumpy
-   */
   const x = isMobile ? event.changedTouches[0].clientX : event.clientX;
   const y = isMobile ? event.changedTouches[0].clientY : event.clientY;
   const { layerX, layerY } = evt
@@ -75,8 +71,6 @@ output.addEventListener('mousedown', output.initDrag);
 output.addEventListener('touchstart', output.initDrag);
 
 btnClear.addEventListener('click', () => {
-  event.preventDefault();
-  console.log(event.type);
   output.innerHTML = '';
   output.appendChild(btnClear);
 });
