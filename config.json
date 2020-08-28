@@ -4,9 +4,11 @@
     "html": "html/pages/home.html",
     "css": [
       "css/components/header.css",
+      "css/components/text_editor.css",
       "css/pages/home.css"
     ],
     "js": [
+      "js/components/text_editor.js",
       "js/pages/home.js"
     ]
   },
