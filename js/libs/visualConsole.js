@@ -81,6 +81,7 @@ window.onerror = function (message, source, lineno, colno, error) {
   div.style.pointerEvents = 'none';
   div.innerHTML += `${source.split('/').pop()} @ ${lineno}: ${message}`;
   output.appendChild(div);
+  output.scrollTo(0, output.scrollHeight);
 };
 
 console.log = function () {
@@ -98,6 +99,8 @@ console.log = function () {
   div.innerHTML += `Log: ${result.join(' ')}`;
   
   output.appendChild(div);
+  
+  output.scrollTo(0, output.scrollHeight);
   
   _log(arguments);
 };
