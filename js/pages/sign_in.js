@@ -1,4 +1,4 @@
-core.controllers.sign_in = () => {
+core.controllers.SignIn = () => {
   $$('.SignIn .btnSignIn').on('click', () => {
     core.fns.goToPage('home');
   });

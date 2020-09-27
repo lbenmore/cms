@@ -1,4 +1,4 @@
-core.controllers.text_editor = () => {
+core.controllers.TextEditor = () => {
   core.log('Text editor initialized');
   
   function TextEditor (options) {
