@@ -1,4 +1,4 @@
-core.controllers.reset_password = () => {
+core.controllers.ResetPassword = () => {
   $$('.ResetPassword .btnResetPassword').on('click', () => {
     core.fns.goToPage('sign_in');
   });

@@ -1,4 +1,4 @@
-core.controllers.register = () => {
+core.controllers.Register = () => {
   $$('.Register .btnRegister').on('click', () => {
     core.fns.goToPage('home');
   });
