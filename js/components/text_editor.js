@@ -2,31 +2,37 @@ core.controllers.TextEditor = () => {
   core.log('Text editor initialized');
   
   function TextEditor (options) {
+    this.stylizeText = options => {
+      const sel = document.getSelection();
+      const rng = sel.getRangeAt(0);
+      const tag = document.createElement('span');
+      
+      switch (options.style) {
+        case 'bold':
+          tag.classList.add('font-bold');
+          break;
+          
+        case 'italic':
+          tag.classList.add('font-italic');
+          break;
+          
+        case 'underline':
+          tag.classList.add('font-underline');
+          break;
+          
+        case 'strikethrough':
+          tag.classList.add('font-strike');
+          break;
+      }
+      
+      rng.surroundContents(tag);
+    };
+    
     this.toolbarHandler = (action, options) => {
       event.preventDefault();
       switch (action) {
         case 'text':
-          const sel = document.getSelection();
-          const rng = sel.getRangeAt(0);
-          const tag = document.createElement('span');
-          const style = event.target.dataset.style;
-          
-          switch (options.style) {
-            case 'bold':
-              tag.style.fontWeight = 'bold';
-              break;
-              
-            case 'italic':
-              tag.style.fontStyle = 'italic';
-              break;
-              
-            case 'underline':
-              tag.style.textDecoration = 'underline';
-              break;
-          }
-          
-          rng.surroundContents(tag);
-          
+          this.stylizeText(options);
           break;
       }
     };
@@ -48,6 +54,7 @@ core.controllers.TextEditor = () => {
       $$(this.toolbar.btnBold).on('click', this.toolbarHandler.bind(this, 'text', { style: 'bold' }));
       $$(this.toolbar.btnItalic).on('click', this.toolbarHandler.bind(this, 'text', { style: 'italic' }));
       $$(this.toolbar.btnUnderline).on('click', this.toolbarHandler.bind(this, 'text', { style: 'underline' }));
+      $$(this.toolbar.btnStrikethrough).on('click', this.toolbarHandler.bind(this, 'text', { style: 'strikethrough' }));
     };
     
     this.decorate = () => {
@@ -86,22 +93,26 @@ core.controllers.TextEditor = () => {
         btnBold,
         btnItalic,
         btnUnderline,
+        btnStrikethrough,
         btnImage
-      ] = new Array(4).fill().map(x => document.createElement('button'));
+      ] = new Array(5).fill('').map(x => document.createElement('button'));
       
       btnBold.textContent = 'B';
       btnItalic.textContent = 'I';
       btnUnderline.textContent = 'U';
+      btnStrikethrough.textContent = 'S';
       btnImage.textContent = '[]';
       
       this.toolbar.appendChild(btnBold);
       this.toolbar.appendChild(btnItalic);
       this.toolbar.appendChild(btnUnderline);
+      this.toolbar.appendChild(btnStrikethrough);
       this.toolbar.appendChild(btnImage);
       
       this.toolbar.btnBold = btnBold;
       this.toolbar.btnItalic = btnItalic;
       this.toolbar.btnUnderline = btnUnderline;
+      this.toolbar.btnStrikethrough = btnStrikethrough;
       this.toolbar.btnImage = btnImage;
     };
       
@@ -114,7 +125,7 @@ core.controllers.TextEditor = () => {
         'textarea'
       ].forEach(el => {
         this[el] = document.createElement('div');
-        this[el].classList.add(el);
+        this[el].classList.add(`texteditor-${el}`);
       });
       
       this.populate();
@@ -127,7 +138,12 @@ core.controllers.TextEditor = () => {
     this.init();
   }
   
-  new TextEditor({
-    target: $$('.TextEditor')
-  })
+  function instantiateTextEditor () {
+    new TextEditor({
+      target: $$('.TextEditor')
+    });
+  }
+  
+  if (core.events.pageLoaded) instantiateTextEditor();
+  else core.events.addEventListener('corePageLoad', instantiateTextEditor);
 };

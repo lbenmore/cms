@@ -40,6 +40,9 @@ core.fns.parseTokens = () => {
     }
     $$(core.container).innerHTML = $$(core.container).innerHTML.replace(new RegExp(macro, 'g'), result);
   }
+  
+  core.events.pageLoaded = true;
+  core.events.dispatchEvent(core.events.pageLoad);
 };
 
 core.fns.loadControllers = function () {
@@ -100,6 +103,7 @@ core.fns.loadPage = (page, pageName) => {
   
   core.log('loadPage -> pageName:', pageName);
   
+  core.events.pageLoaded = false;
   core.events.pageLoad = new CustomEvent('corePageLoad', {
     detail: { page, pageName }
   })
@@ -126,7 +130,6 @@ core.fns.loadPage = (page, pageName) => {
         function checkLoad (appended) {
           if (appended === assets.length) {
             core.log('loadPage -> asset appendage complete');
-            core.events.dispatchEvent(core.events.pageLoad);
             core.fns.parsePage();
           }
         }
