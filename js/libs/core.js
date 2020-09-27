@@ -1,6 +1,6 @@
 
 const core = {};
-core.container = '.container';
+core.container = '.core-container';
 core.events = document.createElement('div');
 core.vars = {};
 core.fns = {};
@@ -83,7 +83,6 @@ core.fns.parseIncludes = () => {
         inc.innerHTML = html;
         inc.removeAttribute('data-core-include');
         checkLoad(numIncs, ++currInc);
-        core.controllers[incName] && core.controllers[incName]();
       },
       error: res => console.log(`Error retrieving include: ${url} -> ${res}`)
     });
@@ -124,8 +123,6 @@ core.fns.loadPage = (page, pageName) => {
       success: res => {
         let appendedAssets = 1;
         
-        core.log('loadPage -> html retrieval complete');
-        
         function checkLoad (appended) {
           if (appended === assets.length) {
             core.log('loadPage -> asset appendage complete');
@@ -133,6 +130,9 @@ core.fns.loadPage = (page, pageName) => {
             core.fns.parsePage();
           }
         }
+        
+        $$(core.container).innerHTML = res;
+        core.log('loadPage -> html retrieval complete');
         
         $$('.core-stylesheets').innerHTML = '';
         for (const ss of page.css) {
@@ -142,8 +142,6 @@ core.fns.loadPage = (page, pageName) => {
           link.onload = checkLoad.bind(null, ++appendedAssets);
           $$('.core-stylesheets').appendChild(link);
         }
-        
-        $$(core.container).innerHTML = res;
         
         $$('.core-scripts').innerHTML = '';
         for (const scr of page.js) {
