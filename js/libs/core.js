@@ -21,39 +21,6 @@ core.log = function () {
   // }
 };
 
-core.fns.parseIncludes = () => {
-  const incs = $$(`${core.container} [data-core-include]`, true);
-  const numIncs = incs.length;
-  let currInc = 0;
-  
-  function checkLoad (total, current) {
-    if (current === total) {
-      if ($$(`${core.container} [data-core-include]`, true).length) {
-        core.fns.parseIncludes();
-      }
-    }
-  }
-  
-  core.log('parseIncludes');
-  
-  incs.forEach(inc => {
-    const src = inc.dataset.coreInclude;
-    const url = src.indexOf('html/') === -1 ? `html/${src}` : src;
-    
-    core.log('parseIncludes ->', url);
-    
-    $$.ajax({
-      url,
-      success: html => {
-        inc.innerHTML = html;
-        inc.removeAttribute('data-core-include');
-        checkLoad(numIncs, ++currInc);
-      },
-      error: res => console.log(`Error retrieving include: ${url} -> ${res}`)
-    });
-  });
-};
-
 core.fns.parseTokens = () => {
   const pattern = /\{\{\s*(\S*)\s*\}\}/g;
   let match;
@@ -75,9 +42,55 @@ core.fns.parseTokens = () => {
   }
 };
 
+core.fns.loadControllers = function () {
+  const ctrls = $$(`${core.container} [data-core-controller]`, true);
+  
+  ctrls.forEach(ctrl => {
+    const name = ctrl.dataset.coreController;
+    core.controllers[name] && core.controllers[name]();
+  });
+  
+  core.fns.parseTokens();
+};
+
+core.fns.parseIncludes = () => {
+  const incs = $$(`${core.container} [data-core-include]`, true);
+  const numIncs = incs.length;
+  let currInc = 0;
+  
+  function checkLoad (total, current) {
+    if (current === total) {
+      if ($$(`${core.container} [data-core-include]`, true).length) {
+        core.fns.parseIncludes();
+      } else {
+        core.fns.loadControllers();
+      }
+    }
+  }
+  
+  core.log('parseIncludes');
+  
+  incs.forEach(inc => {
+    const src = inc.dataset.coreInclude;
+    const url = src.indexOf('html/') === -1 ? `html/${src}` : src;
+    const incName = url.split('/').pop().split('.')[0];
+    
+    core.log('parseIncludes ->', url);
+    
+    $$.ajax({
+      url,
+      success: html => {
+        inc.innerHTML = html;
+        inc.removeAttribute('data-core-include');
+        checkLoad(numIncs, ++currInc);
+      },
+      error: res => console.log(`Error retrieving include: ${url} -> ${res}`)
+    });
+  });
+};
+
 core.fns.parsePage = () => {
   core.log('parsePage');
-  core.fns.parseTokens();
   core.fns.parseIncludes();
 };
 
@@ -115,7 +128,6 @@ core.fns.loadPage = (page, pageName) => {
         function checkLoad (appended) {
           if (appended === assets.length) {
             core.log('loadPage -> asset appendage complete');
-            core.controllers[pageName]();
             core.events.dispatchEvent(core.events.pageLoad);
             core.fns.parsePage();
           }
