@@ -3,37 +3,7 @@ core.controllers.TextEditor = () => {
   
   function TextEditor (options) {
     this.stylizeText = options => {
-      const sel = document.getSelection();
-      const rng = sel.getRangeAt(0);
-      const tag = document.createElement('span');
-      let reselect, selection;
-      
-      switch (options.style) {
-        case 'bold':
-          tag.classList.add('font-bold');
-          break;
-          
-        case 'italic':
-          tag.classList.add('font-italic');
-          break;
-          
-        case 'underline':
-          tag.classList.add('font-underline');
-          break;
-          
-        case 'strikethrough':
-          tag.classList.add('font-strike');
-          break;
-      }
-      
-      rng.surroundContents(tag);
-      
-      reselect = document.createRange();
-      reselect.selectNodeContents(tag);
-      
-      selection = window.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(reselect);
+      document.execCommand(options.style);
     };
     
     this.toolbarHandler = (action, options) => {
@@ -60,7 +30,7 @@ core.controllers.TextEditor = () => {
       $$(this.toolbar.btnBold).on('mousedown', this.toolbarHandler.bind(this, 'text', { style: 'bold' }));
       $$(this.toolbar.btnItalic).on('mousedown', this.toolbarHandler.bind(this, 'text', { style: 'italic' }));
       $$(this.toolbar.btnUnderline).on('mousedown', this.toolbarHandler.bind(this, 'text', { style: 'underline' }));
-      $$(this.toolbar.btnStrikethrough).on('mousedown', this.toolbarHandler.bind(this, 'text', { style: 'strikethrough' }));
+      $$(this.toolbar.btnStrikethrough).on('mousedown', this.toolbarHandler.bind(this, 'text', { style: 'strikeThrough' }));
     };
     
     this.decorate = () => {
