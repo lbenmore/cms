@@ -6,6 +6,7 @@ core.controllers.TextEditor = () => {
       const sel = document.getSelection();
       const rng = sel.getRangeAt(0);
       const tag = document.createElement('span');
+      let reselect, selection;
       
       switch (options.style) {
         case 'bold':
@@ -26,6 +27,13 @@ core.controllers.TextEditor = () => {
       }
       
       rng.surroundContents(tag);
+      
+      reselect = document.createRange();
+      reselect.selectNodeContents(tag);
+      
+      selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(reselect);
     };
     
     this.toolbarHandler = (action, options) => {
