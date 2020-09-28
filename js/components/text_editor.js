@@ -45,24 +45,22 @@ core.controllers.TextEditor = () => {
       }
     };
     
-    this.eventListeners = () => {
-      $$(this.textarea).on('keydown', () => {
-        // tab button. not doing what i want
-        if (event.keyCode === 9) {
-          // event.preventDefault();
-          // event.target.innerHTML += '\t';
-          // event.target.innerHTML = event.target.innerHTML;
+    this.textareaHandler = () => {
+      switch (event.keyCode) {
+        case 9:
+          event.preventDefault();
+          document.execCommand('insertText', false, '\t');
           
-          // not working
-          // const _ = event.target;
-          // _.selectionStart = _.selectionEnd = _.textContent.length;
-        }
-      });
-      
-      $$(this.toolbar.btnBold).on('click', this.toolbarHandler.bind(this, 'text', { style: 'bold' }));
-      $$(this.toolbar.btnItalic).on('click', this.toolbarHandler.bind(this, 'text', { style: 'italic' }));
-      $$(this.toolbar.btnUnderline).on('click', this.toolbarHandler.bind(this, 'text', { style: 'underline' }));
-      $$(this.toolbar.btnStrikethrough).on('click', this.toolbarHandler.bind(this, 'text', { style: 'strikethrough' }));
+          break;
+      }
+    };
+    
+    this.eventListeners = () => {
+      $$(this.textarea).on('keydown', this.textareaHandler.bind(this));
+      $$(this.toolbar.btnBold).on('mousedown', this.toolbarHandler.bind(this, 'text', { style: 'bold' }));
+      $$(this.toolbar.btnItalic).on('mousedown', this.toolbarHandler.bind(this, 'text', { style: 'italic' }));
+      $$(this.toolbar.btnUnderline).on('mousedown', this.toolbarHandler.bind(this, 'text', { style: 'underline' }));
+      $$(this.toolbar.btnStrikethrough).on('mousedown', this.toolbarHandler.bind(this, 'text', { style: 'strikethrough' }));
     };
     
     this.decorate = () => {
@@ -92,7 +90,8 @@ core.controllers.TextEditor = () => {
         padding: 'var(--gutter)',
         width: '100%',
         height: '100%',
-        border: '1px solid black'
+        border: '1px solid black',
+        whiteSpace: 'pre-wrap'
       });
     };
     
