@@ -93,6 +93,28 @@ let $$;
     }
     
     if (el) {
+      el.css = (property, value, delay) => {
+        if (el.length) {
+          for (const _ of el) $$(_).css(property, value, delay);
+          return el;
+        }
+        
+        let propIsObj = false;
+        
+        if (typeof property === 'object') {
+          delay = value;
+          value = null;
+          propIsObj = true;
+        }
+        
+        setTimeout(() => {
+          if (typeof property === 'string') el.style[property] = value;
+          else if (propIsObj) for (const _ in property) el.style[_] = property[_];
+        }, delay || 0);
+        
+        return el;
+      };
+      
       el.on = (evt, fn, opts) => {
         if (el.length) {
           for (const _ of el) $$(_).on(evt, fn, opts);
@@ -113,7 +135,7 @@ let $$;
         
         return el;
       };
-    }
+    };
     
     return el;
   };
