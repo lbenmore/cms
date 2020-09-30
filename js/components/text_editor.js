@@ -63,7 +63,8 @@ core.controllers.TextEditor = () => {
         width: '240px',
         height: '120px',
         padding: 'var(--gutter)',
-        border: '1px dotted black'
+        border: '1px dotted black',
+        textAlign: 'center'
       });
       
       $$(`.lightbox${ts}__input--file`).css({
@@ -152,7 +153,7 @@ core.controllers.TextEditor = () => {
     };
     
     this.stylize = () => {
-      Object.assign(this.container.style, {
+      $$(this.container).css({
         margin: 'var(--gutter) 0',
         padding: 'var(--gutter)',
         width: '100%',
@@ -160,11 +161,11 @@ core.controllers.TextEditor = () => {
         border: '1px solid black'
       });
       
-      Object.assign(this.toolbar.style, {
+      $$(this.toolbar).css({
         marginBottom: 'var(--gutter)'
-      })
+      });
       
-      Object.assign(this.textarea.style, {
+      $$(this.textarea).css({
         padding: 'var(--gutter)',
         width: '100%',
         height: '100%',
@@ -180,7 +181,7 @@ core.controllers.TextEditor = () => {
         btnUnderline,
         btnStrikethrough,
         btnImage
-      ] = new Array(5).fill('').map(x => document.createElement('button'));
+      ] = new Array(5).fill().map(x => document.createElement('button'));
       
       btnBold.textContent = 'B';
       btnItalic.textContent = 'I';
@@ -201,7 +202,7 @@ core.controllers.TextEditor = () => {
       this.toolbar.btnImage = btnImage;
     };
       
-    this.init = () => {
+    this.init = options => {
       for (const _ in options) this[_] = options[_];
       
       [
@@ -214,21 +215,23 @@ core.controllers.TextEditor = () => {
       });
       
       this.populate();
-      this.stylize();
       this.addToDom();
       this.decorate();
+      this.stylize();
       this.eventListeners();
     };
     
-    this.init();
+    this.init(options);
   }
   
-  function instantiateTextEditor () {
-    new TextEditor({
-      target: $$('.TextEditor')
-    });
-  }
+  core.events.componentLoad = new CustomEvent('coreComponentLoad', {
+    detail: {
+      component: TextEditor,
+      componentName: 'TextEditor'
+    }
+  });
   
-  if (core.events.pageLoaded) instantiateTextEditor();
-  else core.events.addEventListener('corePageLoad', instantiateTextEditor);
+  setTimeout(() => {
+    core.events.dispatchEvent(core.events.componentLoad);
+  });
 };

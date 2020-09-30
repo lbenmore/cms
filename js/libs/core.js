@@ -5,6 +5,7 @@ core.events = document.createElement('div');
 core.vars = {};
 core.fns = {};
 core.controllers = {};
+core.components = {};
 core.config = {};
 core.user = {};
 core.debug = !0;
