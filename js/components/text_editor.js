@@ -6,19 +6,27 @@ core.controllers.TextEditor = () => {
       const ts = new Date().getTime();
       const lightboxHtml = `
         <div class="lightbox${ts}">
-          <div class="lightbox${ts}__panel">
-            <h3>Insert an Image</h3>
-            <div class="lightbox${ts}__inputWrapper">
-              <label class="lightbox${ts}__label" for="lightbox${ts}__input--image">Drag Image Here or Click to Select</label>
-              <input class="lightbox${ts}__input lightbox${ts}__input--file" id="lightbox${ts}__input--image" type="file">
+          <div class="lightbox${ts}__container">
+            <div class="lightbox${ts}__panel">
+              <h3>Insert an Image</h3>
+              <div class="lightbox${ts}__inputWrapper">
+                <label class="lightbox${ts}__label" for="lightbox${ts}__input--image">Drag Image Here or Click to Select</label>
+                <input class="lightbox${ts}__input lightbox${ts}__input--file" id="lightbox${ts}__input--image" type="file">
+              </div>
+              <h4>-- OR --</h4>
+              <div class="lightbox${ts}__inputWrapper">
+                <input type="text" class="lightbox${ts}__input lightbox${ts}__input--text" placeholder="Image URL">
+              </div>
+              <h4>-- SIZE --</h4>
+              <div class="lightbox${ts}__inputWrapper">
+              <label><input type="radio" class="lightbox${ts}__input lightbox${ts}__input--radio" name="size" value="inline"> Inline</label>
+              <span style="display: inline-block: width: var(--gutter);"></span>
+              <label><input type="radio" class="lightbox${ts}__input lightbox${ts}__input--radio" name="size" value="fullwidth"> Full Width</label>
+              </div>
+              <h4>--</h4>
+              <div class="lightbox${ts}__preview"></div>
+              <button class="lightbox${ts}__btn lightbox${ts}__btn--insert">Insert</button>
             </div>
-            <h4>-- OR --</h4>
-            <div class="lightbox${ts}__inputWrapper">
-              <input type="text" class="lightbox${ts}__input lightbox${ts}__input--text" placeholder="Image URL">
-            </div>
-            <h4>--</h4>
-            <div class="lightbox${ts}__preview"></div>
-            <button class="lightbox${ts}__btn lightbox${ts}__btn--insert">Insert</button>
           </div>
         </div>
       `;
@@ -40,12 +48,20 @@ core.controllers.TextEditor = () => {
       $$(core.container).appendChild(lightbox);
       
       $$(`.lightbox${ts}`).css({
+        display: 'table',
         position: 'fixed',
         top: '0',
         left: '0',
         width: '100vw',
         height: 'calc(100 * var(--vh))',
-        backgroundColor: 'rgba(0, 0, 0, 0.75)'
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        zIndex: '1'
+      });
+      
+      $$(`.lightbox${ts}__container`).css({
+        display: 'table-cell',
+        verticalAlign: 'middle',
+        textAlign: 'center'
       });
       
       $$(`.lightbox${ts}__panel`).css({
@@ -54,6 +70,7 @@ core.controllers.TextEditor = () => {
         left: '50%',
         padding: 'var(--gutter)',
         backgroundColor: '#fff',
+        textAlign: 'left',
         transform: 'translate(-50%, -50%)'
       });
       
@@ -99,11 +116,17 @@ core.controllers.TextEditor = () => {
       
       $$(`.lightbox${ts}__btn--insert`).on('click', () => {
         const img = $$(`.lightbox${ts}__preview`).querySelector('img');
+        const width = $$(`.lightbox${ts}__input--radio[value=fullwidth`).checked ? '100%' : '240px';
+        const height = 'auto';
+        
+        $$(img).css({ width, height })
+        
         this.textarea.appendChild(img);
         $$(core.container).removeChild(lightbox);
       });
       
-      $$(`.lightbox${ts}`).on('click', () => {
+      $$(`.lightbox${ts}__container`).on('click', () => {
+        core.log(event.target.className, event.currentTarget.className);
         if (event.target === event.currentTarget) {
           $$(core.container).removeChild(lightbox);
         }
@@ -222,6 +245,8 @@ core.controllers.TextEditor = () => {
     };
     
     this.init(options);
+    
+    return this.textarea;
   }
   
   core.events.componentLoad = new CustomEvent('coreComponentLoad', {
