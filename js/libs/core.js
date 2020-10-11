@@ -107,7 +107,7 @@ core.fns.loadPage = (page, pageName) => {
   core.events.pageLoaded = false;
   core.events.pageLoad = new CustomEvent('corePageLoad', {
     detail: { page, pageName }
-  })
+  });
   
   if (!$$('.core-stylesheets')) {
     const div = document.createElement('div');

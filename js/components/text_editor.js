@@ -19,7 +19,7 @@ core.controllers.TextEditor = () => {
               </div>
               <h4>-- SIZE --</h4>
               <div class="lightbox${ts}__inputWrapper">
-              <label><input type="radio" class="lightbox${ts}__input lightbox${ts}__input--radio" name="size" value="inline"> Inline</label>
+              <label><input type="radio" class="lightbox${ts}__input lightbox${ts}__input--radio" name="size" value="inline" checked> Inline</label>
               <span style="display: inline-block: width: var(--gutter);"></span>
               <label><input type="radio" class="lightbox${ts}__input lightbox${ts}__input--radio" name="size" value="fullwidth"> Full Width</label>
               </div>
@@ -143,6 +143,20 @@ core.controllers.TextEditor = () => {
         case 'text':
           this.stylizeText(options);
           break;
+          
+        case 'plain':
+          const html = this.toolbar.btnTogglePlainText.plain ? this.textarea.textContent : this.textarea.innerHTML;
+          const newTag = document.createElement(this.toolbar.btnTogglePlainText.plain ? 'div' : 'textarea');
+          
+          newTag.innerHTML = html;
+          this.textarea.replaceWith(newTag);
+          this.textarea = newTag;
+          
+          this.stylize();
+          this.decorate();
+          
+          this.toolbar.btnTogglePlainText.plain = !this.toolbar.btnTogglePlainText.plain;
+          break;
       }
     };
     
@@ -163,6 +177,7 @@ core.controllers.TextEditor = () => {
       $$(this.toolbar.btnUnderline).on('mousedown', this.toolbarHandler.bind(this, 'text', { style: 'underline' }));
       $$(this.toolbar.btnStrikethrough).on('mousedown', this.toolbarHandler.bind(this, 'text', { style: 'strikeThrough' }));
       $$(this.toolbar.btnImage).on('click', this.insertImage.bind(this));
+      $$(this.toolbar.btnTogglePlainText).on('mousedown', this.toolbarHandler.bind(this, 'plain'));
     };
     
     this.decorate = () => {
@@ -193,6 +208,8 @@ core.controllers.TextEditor = () => {
         width: '100%',
         height: '100%',
         border: '1px solid black',
+        borderRadius: '0',
+        resize: 'none',
         whiteSpace: 'pre-wrap'
       });
     };
@@ -203,26 +220,33 @@ core.controllers.TextEditor = () => {
         btnItalic,
         btnUnderline,
         btnStrikethrough,
-        btnImage
-      ] = new Array(5).fill().map(x => document.createElement('button'));
+        btnImage,
+        btnTogglePlainText
+      ] = new Array(6).fill().map(x => document.createElement('button'));
       
-      btnBold.textContent = 'B';
-      btnItalic.textContent = 'I';
-      btnUnderline.textContent = 'U';
-      btnStrikethrough.textContent = 'S';
-      btnImage.textContent = '[]';
+      btnBold.innerHTML = '<b>B</b>';
+      btnItalic.innerHTML = '<i>I</i>';
+      btnUnderline.innerHTML = '<u>U</u>';
+      btnStrikethrough.innerHTML = '<s>S</s>';
+      btnImage.textContent = 'Insert Image';
+      btnTogglePlainText.textContent = 'Toggle Plain Text';
+      
+      btnTogglePlainText.plain = false;
       
       this.toolbar.appendChild(btnBold);
       this.toolbar.appendChild(btnItalic);
       this.toolbar.appendChild(btnUnderline);
       this.toolbar.appendChild(btnStrikethrough);
       this.toolbar.appendChild(btnImage);
+      // this hurts more than it helps
+      // this.toolbar.appendChild(btnTogglePlainText);
       
       this.toolbar.btnBold = btnBold;
       this.toolbar.btnItalic = btnItalic;
       this.toolbar.btnUnderline = btnUnderline;
       this.toolbar.btnStrikethrough = btnStrikethrough;
       this.toolbar.btnImage = btnImage;
+      this.toolbar.btnTogglePlainText = btnTogglePlainText;
     };
       
     this.init = options => {
