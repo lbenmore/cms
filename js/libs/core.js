@@ -10,16 +10,8 @@ core.config = {};
 core.user = {};
 core.debug = !0;
 
-core.log = function () {
-  if (core.debug) console.log.apply(null, arguments);
-  // err is an empty object on iPad iOS 14
-  // try { throw new Error(); } catch (err) {
-  //   console.log(err);
-  //   // use error properties to create informative label
-  //   for (const _ in err) {
-  //     console.log(`${_}, ${err[_]}`);
-  //   }
-  // }
+core.log = (...args) => {
+  if (core.debug) console.log.apply(null, args);
 };
 
 core.fns.parseTokens = () => {
