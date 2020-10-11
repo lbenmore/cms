@@ -135,6 +135,7 @@ let $$;
         
         for (const prop in properties) transitionStyle += `${prop} ${dur}ms ${timingFunction || 'ease'}, `;
         transitionStyle = transitionStyle.slice(0, -2);
+        el.css('-webkit-transition', transitionStyle, setTime);
         el.css('transition', transitionStyle, setTime);
         
         for (const prop in properties) el.css(prop, properties[prop], execTime);
