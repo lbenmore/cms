@@ -38,7 +38,7 @@ core.fns.parseTokens = () => {
   core.events.dispatchEvent(core.events.pageLoad);
 };
 
-core.fns.loadControllers = function () {
+core.fns.loadControllers = () => {
   const ctrls = $$(`${core.container} [data-core-controller]`, true);
   
   ctrls.forEach(ctrl => {
@@ -54,7 +54,7 @@ core.fns.parseIncludes = () => {
   const numIncs = incs.length;
   let currInc = 0;
   
-  function checkLoad (total, current) {
+  const checkLoad = (total, current) => {
     if (current === total) {
       if ($$(`${core.container} [data-core-include]`, true).length) {
         core.fns.parseIncludes();
@@ -120,7 +120,7 @@ core.fns.loadPage = (page, pageName) => {
       success: res => {
         let appendedAssets = 1;
         
-        function checkLoad (appended) {
+        const checkLoad = (appended) => {
           if (appended === assets.length) {
             core.log('loadPage -> asset appendage complete');
             core.fns.parsePage();

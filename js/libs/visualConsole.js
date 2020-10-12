@@ -108,7 +108,7 @@ console.log = (...args) => {
     const slashSplit = origin.split('/');
     const fileName = slashSplit.pop();
     
-    label = `${fn} ${fileName}: `;
+    label = `${fn} ${fileName}`;
   } catch (e) { }
   
   div.style.pointerEvents = 'none';
