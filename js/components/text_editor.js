@@ -5,7 +5,7 @@ core.controllers.TextEditor = () => {
     this.insertImage = () => {
       const ts = new Date().getTime();
       const lightboxHtml = `
-        <div class="lightbox${ts}">
+        <div class="lightbox lightbox${ts}">
           <div class="lightbox${ts}__container">
             <div class="lightbox${ts}__panel">
               <h3>Insert an Image</h3>
@@ -44,54 +44,12 @@ core.controllers.TextEditor = () => {
         $$(`.lightbox${ts}__preview`).appendChild(img);
       }
       
+      function closeLightbox () {
+        lightbox && lightbox.parentNode.removeChild(lightbox);
+      }
+      
       lightbox.innerHTML = lightboxHtml;
       $$(core.container).appendChild(lightbox);
-      
-      $$(`.lightbox${ts}`).css({
-        display: 'table',
-        position: 'fixed',
-        top: '0',
-        left: '0',
-        width: '100vw',
-        height: 'calc(100 * var(--vh))',
-        backgroundColor: 'rgba(0, 0, 0, 0.75)',
-        zIndex: '1'
-      });
-      
-      $$(`.lightbox${ts}__container`).css({
-        display: 'table-cell',
-        verticalAlign: 'middle',
-        textAlign: 'center'
-      });
-      
-      $$(`.lightbox${ts}__panel`).css({
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        padding: 'var(--gutter)',
-        backgroundColor: '#fff',
-        textAlign: 'left',
-        transform: 'translate(-50%, -50%)'
-      });
-      
-      $$(`.lightbox${ts}__label`).css({
-        display: 'block',
-        position: 'relative',
-        width: '240px',
-        height: '120px',
-        padding: 'var(--gutter)',
-        border: '1px dotted black',
-        textAlign: 'center'
-      });
-      
-      $$(`.lightbox${ts}__input--file`).css({
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        width: '100%',
-        height: '100%',
-        opacity: '0'
-      });
       
       $$(`.lightbox${ts}__input--file`).on('input', () => {
         /*
@@ -119,17 +77,16 @@ core.controllers.TextEditor = () => {
         const width = $$(`.lightbox${ts}__input--radio[value=fullwidth`).checked ? '100%' : '240px';
         const height = 'auto';
         
-        $$(img).css({ width, height })
+        if (img) {
+          $$(img).css({ width, height });
+          this.textarea.appendChild(img);
+        }
         
-        this.textarea.appendChild(img);
-        $$(core.container).removeChild(lightbox);
+        closeLightbox();
       });
       
       $$(`.lightbox${ts}__container`).on('click', () => {
-        core.log(event.target.className, event.currentTarget.className);
-        if (event.target === event.currentTarget) {
-          $$(core.container).removeChild(lightbox);
-        }
+        (event.target === event.currentTarget) && closeLightbox();
       });
     };
     
