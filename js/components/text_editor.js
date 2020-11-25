@@ -147,30 +147,6 @@ core.controllers.TextEditor = () => {
       this.target.appendChild(this.container);
     };
     
-    this.stylize = () => {
-      $$(this.container).css({
-        margin: 'var(--gutter) 0',
-        padding: 'var(--gutter)',
-        width: '100%',
-        height: '100%',
-        border: '1px solid black'
-      });
-      
-      $$(this.toolbar).css({
-        marginBottom: 'var(--gutter)'
-      });
-      
-      $$(this.textarea).css({
-        padding: 'var(--gutter)',
-        width: '100%',
-        height: '100%',
-        border: '1px solid black',
-        borderRadius: '0',
-        resize: 'none',
-        whiteSpace: 'pre-wrap'
-      });
-    };
-    
     this.populate = () => {
       const [
         btnBold,
@@ -221,7 +197,6 @@ core.controllers.TextEditor = () => {
       this.populate();
       this.addToDom();
       this.decorate();
-      this.stylize();
       this.eventListeners();
     };
     
