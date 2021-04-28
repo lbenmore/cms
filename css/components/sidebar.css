@@ -1,0 +1,25 @@
+aside {
+  top: var(--header-height);
+  left: 0;
+  bottom: 0;
+  padding: var(--gutter);
+  width: var(--sidebar-width);
+  box-shadow: var(--shadow);
+}
+
+.sidebar__list ul {
+  list-style: none;
+}
+
+.sidebar__list li {
+  margin-top: 8px;
+}
+
+.sidebar__list > ul {
+  font-size: 20px;
+}
+
+.sidebar__list ul ul {
+  margin-left: 8px;
+  font-size: 0.9em;
+}
