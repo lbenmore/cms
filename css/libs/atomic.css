@@ -14,12 +14,44 @@
   position: fixed;
 }
 
+.m-v {
+  margin: var(--gutter) 0;
+}
+
+.p {
+  padding: var(--gutter);
+}
+
 .w-full {
   width: 100%;
 }
 
 .h-full {
   height: 100%;
+}
+
+.radius-0 {
+  border-radius: 0;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.size-14 {
+  font-size: 14px;
+}
+
+.font-italic {
+  font-style: italic;
+}
+
+.font-underline {
+  text-decoration: underline;
+}
+
+.font-strike {
+  text-decoration: line-through;
 }
 
 .text-center {

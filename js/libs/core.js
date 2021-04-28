@@ -1,24 +1,17 @@
 
 const core = {};
-core.container = '.container';
+core.container = '.core-container';
 core.events = document.createElement('div');
 core.vars = {};
 core.fns = {};
 core.controllers = {};
+core.components = {};
 core.config = {};
 core.user = {};
 core.debug = !0;
 
-core.log = function () {
-  if (core.debug) console.log.apply(null, arguments);
-  // err is an empty object on iPad iOS 14
-  // try { throw new Error(); } catch (err) {
-  //   console.log(err);
-  //   // use error properties to create informative label
-  //   for (const _ in err) {
-  //     console.log(`${_}, ${err[_]}`);
-  //   }
-  // }
+core.log = (...args) => {
+  if (core.debug) console.log.apply(null, args);
 };
 
 core.fns.parseTokens = () => {
@@ -40,9 +33,12 @@ core.fns.parseTokens = () => {
     }
     $$(core.container).innerHTML = $$(core.container).innerHTML.replace(new RegExp(macro, 'g'), result);
   }
+  
+  core.events.pageLoaded = true;
+  core.events.dispatchEvent(core.events.pageLoad);
 };
 
-core.fns.loadControllers = function () {
+core.fns.loadControllers = () => {
   const ctrls = $$(`${core.container} [data-core-controller]`, true);
   
   ctrls.forEach(ctrl => {
@@ -58,7 +54,7 @@ core.fns.parseIncludes = () => {
   const numIncs = incs.length;
   let currInc = 0;
   
-  function checkLoad (total, current) {
+  const checkLoad = (total, current) => {
     if (current === total) {
       if ($$(`${core.container} [data-core-include]`, true).length) {
         core.fns.parseIncludes();
@@ -100,9 +96,10 @@ core.fns.loadPage = (page, pageName) => {
   
   core.log('loadPage -> pageName:', pageName);
   
+  core.events.pageLoaded = false;
   core.events.pageLoad = new CustomEvent('corePageLoad', {
     detail: { page, pageName }
-  })
+  });
   
   if (!$$('.core-stylesheets')) {
     const div = document.createElement('div');
@@ -123,15 +120,15 @@ core.fns.loadPage = (page, pageName) => {
       success: res => {
         let appendedAssets = 1;
         
-        core.log('loadPage -> html retrieval complete');
-        
-        function checkLoad (appended) {
+        const checkLoad = (appended) => {
           if (appended === assets.length) {
             core.log('loadPage -> asset appendage complete');
-            core.events.dispatchEvent(core.events.pageLoad);
             core.fns.parsePage();
           }
         }
+        
+        $$(core.container).innerHTML = res;
+        core.log('loadPage -> html retrieval complete');
         
         $$('.core-stylesheets').innerHTML = '';
         for (const ss of page.css) {
@@ -141,8 +138,6 @@ core.fns.loadPage = (page, pageName) => {
           link.onload = checkLoad.bind(null, ++appendedAssets);
           $$('.core-stylesheets').appendChild(link);
         }
-        
-        $$(core.container).innerHTML = res;
         
         $$('.core-scripts').innerHTML = '';
         for (const scr of page.js) {

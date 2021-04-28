@@ -1,6 +1,7 @@
 const output = document.createElement('div');
 const btnClear = document.createElement('button');
 const _log = console.log;
+const _error = window.onerror;
 
 Object.assign(output.style, {
   position: 'fixed',
@@ -75,32 +76,52 @@ btnClear.addEventListener('click', () => {
   output.appendChild(btnClear);
 });
 
-window.onerror = function (message, source, lineno, colno, error) {
+window.onerror = (...args) => {
   const div = document.createElement('div');
+  const [
+    message,
+    source,
+    lineno,
+    colno,
+    error
+  ] = args;
+  
   div.style.color = 'crimson';
   div.style.pointerEvents = 'none';
-  div.innerHTML += `${source.split('/').pop()} @ ${lineno}: ${message}`;
+  div.innerHTML += `Error: ${source.split('/').pop()} @ ${lineno}: ${message}`;
   output.appendChild(div);
   output.scrollTo(0, output.scrollHeight);
+  
+  _error.call(null, args);
 };
 
-console.log = function () {
+console.log = (...args) => {
   const div = document.createElement('div');
-  const args = Array.from(arguments);
   const result = [];
+  let label = '';
+  
+  try {
+    const err = new Error('dummy');
+    const stackLines = err.stack && err.stack.split('\n');
+    const origin = stackLines[2];
+    const fn = origin.indexOf('@') > -1 ? origin.split('@')[0] : 'anonymous';
+    const slashSplit = origin.split('/');
+    const fileName = slashSplit.pop();
+    
+    label = `${fn} ${fileName}`;
+  } catch (e) { }
   
   div.style.pointerEvents = 'none';
   
   for (const arg of args) {
-    if (typeof arg === 'object') result.push(JSON.stringify(arg));
-    else result.push(arg);
+    result.push(typeof arg === 'object' ? JSON.stringify(arg) : arg);
   }
   
-  div.innerHTML += `Log: ${result.join(' ')}`;
+  div.innerHTML += `${label}: ${result.join(' ')}`;
   
   output.appendChild(div);
   
   output.scrollTo(0, output.scrollHeight);
   
-  _log(arguments);
+  _log(args);
 };

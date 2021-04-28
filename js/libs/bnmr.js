@@ -1,6 +1,5 @@
-let $$;
 (function (win, doc) {
-  $$ = (selector, forceArray) => {
+  const $$ = (selector, forceArray) => {
     const el = selector instanceof HTMLElement || selector instanceof HTMLBodyElement || selector instanceof HTMLDocument
       ? selector
       : forceArray || doc.querySelectorAll(selector).length > 1
@@ -93,6 +92,58 @@ let $$;
     }
     
     if (el) {
+      el.css = (property, value, delay) => {
+        if (el.length) {
+          for (const _ of el) $$(_).css(property, value, delay);
+          return el;
+        }
+        
+        let propIsObj = false;
+        
+        if (typeof property === 'object') {
+          delay = value;
+          value = null;
+          propIsObj = true;
+        }
+        
+        setTimeout(() => {
+          if (typeof property === 'string') el.style[property] = value;
+          else if (propIsObj) for (const _ in property) el.style[_] = property[_];
+        }, delay || 0);
+        
+        return el;
+      };
+      
+      el.animate = (properties, duration, delay, timingFunction, callback) => {
+        if (typeof duration === 'function') { callback = duration; duration = null }
+        if (typeof delay === 'function') { callback = delay; delay = null }
+        if (typeof timingFunction === 'function') { callback = timingFunction; timingFunction = null }
+        
+        if (el.length) {
+          for (const _ of el) $$(_).animate(properties, duration, delay, timingFunction);
+          callback && setTimeout(callback, (duration || 0) + (delay || 0));
+          return el;
+        }
+        
+        const dur = duration || 500
+        let transitionStyle = '';
+        let setTime = (delay || 0) >= 50 ? delay - 50 : 0;
+        let execTime = setTime + 50;
+        
+        core.log('dur, setTime, execTime', dur, setTime, execTime);
+        
+        for (const prop in properties) transitionStyle += `${prop} ${dur}ms ${timingFunction || 'ease'}, `;
+        transitionStyle = transitionStyle.slice(0, -2);
+        el.css('-webkit-transition', transitionStyle, setTime);
+        el.css('transition', transitionStyle, setTime);
+        
+        for (const prop in properties) el.css(prop, properties[prop], execTime);
+        
+        callback && setTimeout(callback, (dur || 0) + (delay || 0));
+        
+        return el;
+      };
+      
       el.on = (evt, fn, opts) => {
         if (el.length) {
           for (const _ of el) $$(_).on(evt, fn, opts);
@@ -113,7 +164,20 @@ let $$;
         
         return el;
       };
-    }
+      
+      el.once = (evt, fn) => {
+        const remove = () => {
+          el.removeEventListener(evt, callback);
+        };
+        
+        const callback = () => {
+          fn();
+          remove();
+        };
+        
+        el.addEventListener(evt, callback);
+      };
+    };
     
     return el;
   };
@@ -168,6 +232,40 @@ let $$;
     params ? xhr.send(fd) : xhr.send();
   };
   
+  $$.ls = (type, key, value, callback) => {
+    if ('localStorage' in win) {
+      switch (type) {
+        case 'set':
+          localStorage.setItem(key, value);
+          return $$.ls('get', key);
+        break;
+        
+        case 'get':
+          return localStorage.getItem(key);
+        break;
+        
+        case 'getAll':
+          const payload = {};
+          
+          Object.keys(localStorage).map(key => {
+            payload[key] = $$.ls('get', key);
+          });
+          
+          return payload;
+        break;
+        
+        case 'clear':
+          key ? localStorage.clearItem(key) : localStorage.clear();
+        break;
+        
+        default:
+          return console.error('LocalStorage action not recognized', type);
+      }
+    } else {
+      return console.error('LocalStorage API not supported');
+    }
+  };
+  
   $$.preload = (assets, fn) => {
     function loadAsset (assets, currentIndex) {
       const img = new Image();
@@ -186,7 +284,7 @@ let $$;
     if (typeof assets === 'string') assets = [assets];
     
     loadHandler(assets, 0);
-  }
+  };
   
   $$.onReady = fn => {
     if (doc.readyState === 'complete') fn()
@@ -196,4 +294,6 @@ let $$;
       });
     }
   };
+  
+  win.$$ = $$;
 })(window, window.document);
