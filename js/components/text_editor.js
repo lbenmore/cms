@@ -33,6 +33,9 @@ core.controllers.TextEditor = () => {
       const lightbox = document.createElement('div');
       let to;
       
+      lightbox.innerHTML = lightboxHtml;
+      $$(core.container).appendChild(lightbox);
+      
       function updatePreview (url) {
         const img = document.createElement('img');
         img.src = url;
@@ -48,21 +51,18 @@ core.controllers.TextEditor = () => {
         lightbox && lightbox.parentNode.removeChild(lightbox);
       }
       
-      lightbox.innerHTML = lightboxHtml;
-      $$(core.container).appendChild(lightbox);
-      
-      $$(`.lightbox${ts}__input--file`).on('input', () => {
+      $$(`.lightbox${ts}__input--file`).on('input', evt => {
         /*
         this will eventually be replaced or finalized with 
         the use of uploading the image via php
         */
         const fr = new FileReader();
         
-        fr.addEventListener('load', () => {
-          updatePreview(event.target.result);
+        fr.addEventListener('load', evt => {
+          updatePreview(evt.target.result);
         });
         
-        event.target.files && event.target.files.length && fr.readAsDataURL(event.target.files[0]);
+        evt.target.files && evt.target.files.length && fr.readAsDataURL(evt.target.files[0]);
       });
       
       $$(`.lightbox${ts}__input--text`).on('input', () => {
@@ -85,8 +85,8 @@ core.controllers.TextEditor = () => {
         closeLightbox();
       });
       
-      $$(`.lightbox${ts}__container`).on('click', () => {
-        (event.target === event.currentTarget) && closeLightbox();
+      $$(`.lightbox${ts}__container`).on('click', evt => {
+        (evt.target === evt.currentTarget) && closeLightbox();
       });
     };
     
@@ -94,8 +94,8 @@ core.controllers.TextEditor = () => {
       document.execCommand(options.style);
     };
     
-    this.toolbarHandler = (action, options) => {
-      event.preventDefault();
+    this.toolbarHandler = (action, options, evt) => {
+      evt.preventDefault();
       switch (action) {
         case 'text':
           this.stylizeText(options);
@@ -117,13 +117,16 @@ core.controllers.TextEditor = () => {
       }
     };
     
-    this.textareaHandler = () => {
-      switch (event.keyCode) {
+    this.textareaHandler = evt => {
+      switch (evt.keyCode) {
         case 9:
-          event.preventDefault();
+          evt.preventDefault();
           document.execCommand('insertText', false, '\t');
           
           break;
+          
+          default:
+            $$.ls('set', 'bnmr_cms_currentPost', evt.target.innerHTML);
       }
     };
     
@@ -139,6 +142,9 @@ core.controllers.TextEditor = () => {
     
     this.decorate = () => {
       this.textarea.setAttribute('contenteditable', 'true');
+      
+      const currentPost = $$.ls('get', 'bnmr_cms_currentPost');
+      if (currentPost) this.textarea.innerHTML = currentPost;
     };
     
     this.addToDom = () => {
@@ -203,7 +209,7 @@ core.controllers.TextEditor = () => {
     this.init(options);
     
     return this.textarea;
-  }
+  };
   
   core.events.componentLoad = new CustomEvent('coreComponentLoad', {
     detail: {

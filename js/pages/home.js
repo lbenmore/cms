@@ -11,6 +11,12 @@ core.controllers.Home = () => {
     const post = { title, body };
     
     core.log(post.title, post.body);
+    /*
+      will be replaced with saving via php to
+      /content/YYYY/MM/DD/timestamp.json = { title, body }
+      files from the /content directory will populate
+      the cms menu
+    */
   }
   
   function initFns () {

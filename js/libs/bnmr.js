@@ -1,6 +1,5 @@
-let $$;
 (function (win, doc) {
-  $$ = (selector, forceArray) => {
+  const $$ = (selector, forceArray) => {
     const el = selector instanceof HTMLElement || selector instanceof HTMLBodyElement || selector instanceof HTMLDocument
       ? selector
       : forceArray || doc.querySelectorAll(selector).length > 1
@@ -233,6 +232,40 @@ let $$;
     params ? xhr.send(fd) : xhr.send();
   };
   
+  $$.ls = (type, key, value, callback) => {
+    if ('localStorage' in win) {
+      switch (type) {
+        case 'set':
+          localStorage.setItem(key, value);
+          return $$.ls('get', key);
+        break;
+        
+        case 'get':
+          return localStorage.getItem(key);
+        break;
+        
+        case 'getAll':
+          const payload = {};
+          
+          Object.keys(localStorage).map(key => {
+            payload[key] = $$.ls('get', key);
+          });
+          
+          return payload;
+        break;
+        
+        case 'clear':
+          key ? localStorage.clearItem(key) : localStorage.clear();
+        break;
+        
+        default:
+          return console.error('LocalStorage action not recognized', type);
+      }
+    } else {
+      return console.error('LocalStorage API not supported');
+    }
+  };
+  
   $$.preload = (assets, fn) => {
     function loadAsset (assets, currentIndex) {
       const img = new Image();
@@ -251,7 +284,7 @@ let $$;
     if (typeof assets === 'string') assets = [assets];
     
     loadHandler(assets, 0);
-  }
+  };
   
   $$.onReady = fn => {
     if (doc.readyState === 'complete') fn()
@@ -261,4 +294,6 @@ let $$;
       });
     }
   };
+  
+  win.$$ = $$;
 })(window, window.document);
