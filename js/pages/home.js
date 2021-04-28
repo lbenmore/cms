@@ -10,25 +10,27 @@ core.controllers.Home = () => {
     const body = textEditor.innerHTML;
     const post = { title, body };
     
-    core.log(post.title, post.body);
     /*
-      will be replaced with saving via php to
-      /content/YYYY/MM/DD/timestamp.json = { title, body }
-      files from the /content directory will populate
-      the cms menu
+    will be replaced with saving via php to
+    /content/YYYY/MM/DD/timestamp.json = { title, body }
+    files from the /content directory will populate
+    the cms menu
     */
+    core.log(post.title, post.body);
   }
   
   function initFns () {
     $$('.btn-post').on('click', validatePost);
   
-    $$(core.events).on('coreComponentLoad', () => {
-      if (event.detail.componentName === 'TextEditor') {
-        textEditor = new event.detail.component({
-          target: $$('.TextEditor')
-        });
+    $$(core.events).once('coreComponentLoad', () => {
+      switch (event.detail.componentName) {
+        case 'TextEditor':
+          textEditor = new event.detail.component({
+            target: $$('.TextEditor')
+          });
+          break;
       }
-    }, { once: true }); 
+    }); 
   }
   
   $$(core.events).once('corePageLoad', () => {

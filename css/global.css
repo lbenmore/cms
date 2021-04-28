@@ -22,8 +22,13 @@ ul, ol {
 
 main {
   top: var(--header-height);
-  left: 0;
-  width: 100%;
+  left: var(--sidebar-width);
+  width: calc(100% - var(--sidebar-width));
   padding: var(--gutter);
   min-height: calc((var(--vh) * 100) - var(--header-height));
+}
+
+main[data-core-controller='SignIn'] {
+  left: 0;
+  width: 100%;
 }

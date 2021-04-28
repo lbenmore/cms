@@ -6,8 +6,6 @@ core.vars = {};
 core.fns = {};
 core.controllers = {};
 core.components = {};
-core.config = {};
-core.user = {};
 core.debug = !0;
 
 core.log = (...args) => {
@@ -171,56 +169,5 @@ core.fns.goToPage = pageName => {
     window.location.hash = `/${pageName}`;
   }
 };
-
-core.fns.setUser = user => {
-  core.log('setUser -> user:', user);
-  core.user = user;
-  delete core.user.password;
-}
-
-core.fns.init = res => {
-  core.log('init -> authentication response:', res);
-  if (res.status) {
-    if (res.payload.isSignedIn) {
-      core.fns.goToPage(window.location.hash.slice(2));
-      core.fns.setUser(res.payload.user);
-    } else {
-      core.fns.goToPage('sign_in');
-    }
-  } else {
-    core.log('Error verifying user authentication.');
-  }
   
-  window.addEventListener('hashchange', core.fns.onHashChange);
-};
-
-core.fns.checkAuth = () => {
-  core.log('checkAuth');
-  $$.ajax({
-    type: 'json',
-    // method: 'POST',
-    // url: 'php/app.php',
-    url: 'test_user.json',
-    // params: {
-    //   action: 'check_authentication'
-    // },
-    success: core.fns.init,
-    error: res => core.log('Error checking authentication.', this.responseText)
-  });
-};
-
-core.fns.getConfig = () => {
-  core.log('getConfig');
-  $$.ajax({
-    type: 'json',
-    url: 'config.json',
-    success: res => {
-      core.config = res;
-      core.log('getConfig -> config:', core.config);
-      core.fns.checkAuth();
-    },
-    error: res => core.log('Error retrieving config json.', this.responseText)
-  });
-}
-
-$$.onReady(core.fns.getConfig);
+window.addEventListener('hashchange', core.fns.onHashChange);

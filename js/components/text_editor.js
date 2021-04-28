@@ -211,7 +211,7 @@ core.controllers.TextEditor = () => {
     return this.textarea;
   };
   
-  core.events.componentLoad = new CustomEvent('coreComponentLoad', {
+  core.events.textEditorLoad = new CustomEvent('coreComponentLoad', {
     detail: {
       component: TextEditor,
       componentName: 'TextEditor'
@@ -219,6 +219,6 @@ core.controllers.TextEditor = () => {
   });
   
   setTimeout(() => {
-    core.events.dispatchEvent(core.events.componentLoad);
+    core.events.dispatchEvent(core.events.textEditorLoad);
   });
 };

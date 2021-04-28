@@ -4,11 +4,13 @@
     "html": "html/pages/home.html",
     "css": [
       "css/components/header.css",
+      "css/components/sidebar.css",
       "css/components/text_editor.css",
       "css/pages/home.css"
     ],
     "js": [
       "js/components/text_editor.js",
+      "js/components/sidebar.js",
       "js/pages/home.js"
     ]
   },
