@@ -18,6 +18,10 @@
   margin: var(--gutter) 0;
 }
 
+.m-b {
+  margin-bottom: var(--gutter);
+}
+
 .p {
   padding: var(--gutter);
 }
@@ -32,6 +36,12 @@
 
 .radius-0 {
   border-radius: 0;
+}
+
+.caption {
+  opacity: 0.5;
+  font-size: 0.8em;
+  font-style: italic;
 }
 
 .font-bold {
@@ -56,6 +66,10 @@
 
 .text-center {
   text-align: center;
+}
+
+.pre-wrap {
+  white-space: pre-wrap;
 }
 
 .pointer {

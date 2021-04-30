@@ -44,5 +44,17 @@
     "js": [
       "js/pages/reset_password.js"
     ]
+  },
+  "view_all": {
+    "name": "View All Posts",
+    "html": "html/pages/view_all.html",
+    "css": [
+      "css/components/header.css",
+      "css/components/sidebar.css"
+    ],
+    "js": [
+      "js/components/sidebar.js",
+      "js/pages/view_all.js"
+    ]
   }
 }

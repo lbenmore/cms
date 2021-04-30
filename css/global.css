@@ -28,7 +28,9 @@ main {
   min-height: calc((var(--vh) * 100) - var(--header-height));
 }
 
-main[data-core-controller='SignIn'] {
+main[data-core-controller='SignIn'],
+main[data-core-controller='Register'],
+main[data-core-controller='ResetPassword'] {
   left: 0;
   width: 100%;
 }
