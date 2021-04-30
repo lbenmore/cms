@@ -1,5 +1,6 @@
-core.controllers.Sidebar = () => {
-  core.log('Sidebar initialized');
+core.controllers.ViewAll = function () {
+  core.log('View All initialized');
+  core.vars.title = 'View All Posts';
   
   const months = [
     'January',    'February',   'March',    'April',
@@ -7,51 +8,35 @@ core.controllers.Sidebar = () => {
     'September',  'October',    'November', 'December'
   ];
   
-  function populateSidebar (files) {
-    const html = `
-      <ul>
-        ${Object.keys(files).map(year => `
-        <li><h4>${year}</h4>
-          <ul>
-            ${Object.keys(files[year]).map(month => `
-            <li><h5>${months[month - 1]}</h5>
-              <ul>
-                ${Object.keys(files[year][month]).map(date => `
-                ${Object.keys(files[year][month][date]).map(ts => `
-                <li class="pointer">
-                  ${files[year][month][date][ts].title} (${month}/${date})
-                </li>  
-                `).join('')}
-                `).join('')}
-              </ul>
-            </li>  
-            `).join('')}
-          </ul> 
-        </li> 
-        `).join('')}
-      </ul>
-    `;
-    
-    $$('.sidebar__list').innerHTML = html;
-  }
-  
   function loadContent (res) {
     if (res.status) {
-      if (res.payload) {
-        populateSidebar(res.payload);
-      } else {
-        core.log('User has no content available.');
-      }
+      const posts = res.payload;
+      const html = `
+      ${Object.keys(posts).map(year => {
+        return Object.keys(posts[year]).map(month => {
+          return Object.keys(posts[year][month]).map(date => {
+            return Object.keys(posts[year][month][date]).map(ts => {
+              const post = posts[year][month][date][ts]
+              const { title, body } = post;
+              return `
+                <article class="m-b">
+                  <h3>${title}</h3>
+                  <h4 class="caption">${months[month - 1]} ${date}, ${year}</h4>
+                  <div class="pre-wrap">${body}</div>
+                </article>
+              `;
+            }).join('')
+          }).join('')
+        }).join('')
+      }).join('')}
+      `;
+      
+      $$('.posts').innerHTML = html;
     } else {
-      core.log('Error retrieving user content.');
+      core.log('Error retrieving content');
     }
   }
   
-  /*
-    can uncomment out ajax functionality
-    and remove fetch usage once php has
-    been written for getting content
-  */
   // $$.ajax({
   //   type: 'json',
   //   url: 'php/app.php',
