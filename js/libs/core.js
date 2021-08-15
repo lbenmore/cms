@@ -47,6 +47,38 @@ core.fns.loadControllers = () => {
   core.fns.parseTokens();
 };
 
+core.fns.parseTokens = () => {
+  const pattern = /\{\{\s*(\S*)\s*\}\}/g;
+  let match;
+  
+  core.log('parseTokens');
+  
+  while ((match = pattern.exec($$(core.container).innerHTML)) !== null) {
+    const [ macro, token ] = match;
+    const tokenBits = token.split('.');
+    let result = core.vars;
+    let next;
+    
+    core.log('parseTokens ->', token);
+    
+    while (next = tokenBits.shift()) {
+      result = result[next];
+    }
+    $$(core.container).innerHTML = $$(core.container).innerHTML.replace(new RegExp(macro, 'g'), result);
+  }
+};
+
+core.fns.loadControllers = function () {
+  const ctrls = $$(`${core.container} [data-core-controller]`, true);
+  
+  ctrls.forEach(ctrl => {
+    const name = ctrl.dataset.coreController;
+    core.controllers[name] && core.controllers[name]();
+  });
+  
+  core.fns.parseTokens();
+};
+
 core.fns.parseIncludes = () => {
   const incs = $$(`${core.container} [data-core-include]`, true);
   const numIncs = incs.length;
@@ -121,6 +153,7 @@ core.fns.loadPage = (page, pageName) => {
         const checkLoad = (appended) => {
           if (appended === assets.length) {
             core.log('loadPage -> asset appendage complete');
+            core.events.dispatchEvent(core.events.pageLoad);
             core.fns.parsePage();
           }
         }
